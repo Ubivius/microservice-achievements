@@ -1,0 +1,57 @@
+swagger: "2.0"
+info:
+  description: Ubivius game achievements
+  title: Achievements
+  version: 0.1.0
+consumes:
+- application/json
+produces:
+- application/json
+schemes:
+- https
+paths:
+  /:
+    get:
+      tags:
+        - achievements
+      parameters:
+        - name: since
+          in: query
+          type: integer
+          format: int64
+        - name: limit
+          in: query
+          type: integer
+          format: int32
+          default: 20
+      responses:
+        200:
+          description: list of the player's achievements
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/achievement"
+        default:
+          description: achievement error response
+          schema:
+            $ref: "#/definitions/error"
+definitions:
+  achievement:
+    type: object
+    required:
+      - achievementId
+    properties:
+      achievementId:
+        ttype: integer
+        format: int64
+        readOnly: true
+  error:
+    type: object
+    required:
+      - message
+    properties:
+      code:
+        type: integer
+        format: int64
+      message:
+        type: string
