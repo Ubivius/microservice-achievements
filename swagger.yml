@@ -42,7 +42,7 @@ definitions:
       - achievementId
     properties:
       achievementId:
-        ttype: integer
+        type: integer
         format: int64
         readOnly: true
   error:
