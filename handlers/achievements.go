@@ -1,21 +1,33 @@
 package handlers
 
 import (
-	"fmt"
 	"log"
 	"net/http"
+	"strconv"
+
+	"github.com/gorilla/mux"
 )
 
-type Achievement struct {
-	l *log.Logger
+// KeyProduct is a key used for the Product object inside context
+type KeyProduct struct{}
+
+// Product handler used for getting and updating products
+type ProductsHandler struct {
+	logger *log.Logger
 }
 
-func NewAchievement(l *log.Logger) *Achievement {
-	return &Achievement{l}
+func NewProductsHandler(logger *log.Logger) *ProductsHandler {
+	return &ProductsHandler{logger}
 }
 
-func (h *Achievement) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	h.l.Println("Achievement")
-	data := 20
-	fmt.Fprintf(w, "Level %d", data)
+// getProductId extracts the product ID from the URL
+// The verification of this variable is handled by gorilla/mux
+// We panic if it is not valid because that means gorilla is failing
+func getProductId(request *http.Request) int {
+	vars := mux.Vars(request)
+	id, err := strconv.Atoi(vars["id"])
+	if err != nil {
+		panic(err)
+	}
+	return id
 }
