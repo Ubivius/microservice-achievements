@@ -4,9 +4,7 @@ import "testing"
 
 func TestChecksValidation(t *testing.T) {
 	achievement := &Achievement{
-		Name:  "Malcolm",
-		Price: 2.00,
-		SKU:   "abs-abs-abscd",
+		Name: "100 kills",
 	}
 
 	err := achievement.ValidateAchievement()

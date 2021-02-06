@@ -11,14 +11,14 @@ var ErrorAchievementNotFound = fmt.Errorf("Achievement not found")
 // Achievement defines the structure for an API achievement.
 // Formatting done with json tags to the right. "-" : don't include when encoding to json
 type Achievement struct {
-	ID          int     `json:"id"`
-	Name        string  `json:"name" validate:"required"`
-	Description string  `json:"description"`
-	Price       float32 `json:"price" validate:"gt=0"`
-	SKU         string  `json:"sku" validate:"required,sku"`
-	CreatedOn   string  `json:"-"`
-	UpdatedOn   string  `json:"-"`
-	DeletedOn   string  `json:"-"`
+	ID          int    `json:"id"`
+	Name        string `json:"name" validate:"required"`
+	Description string `json:"description"`
+	Condition   string `json:"condition" validate:"required"`
+	SpriteID    int    `json:"spriteid"`
+	CreatedOn   string `json:"-"`
+	UpdatedOn   string `json:"-"`
+	DeletedOn   string `json:"-"`
 }
 
 // Achievements is a collection of Achievement
@@ -99,19 +99,19 @@ func getNextId() int {
 var achievementList = []*Achievement{
 	{
 		ID:          1,
-		Name:        "Sword",
-		Description: "A basic steel sword",
-		Price:       250,
-		SKU:         "abc323",
+		Name:        "10 wins",
+		Description: "Easy Peasy Lemon Squeezy",
+		Condition:   "Accumulate 10 wins",
+		SpriteID:    14,
 		CreatedOn:   time.Now().UTC().String(),
 		UpdatedOn:   time.Now().UTC().String(),
 	},
 	{
 		ID:          2,
-		Name:        "Boots",
-		Description: "Simple leather boots",
-		Price:       100,
-		SKU:         "fjd34",
+		Name:        "100 kills",
+		Description: "Monster hunter",
+		Condition:   "Accumulate 100 kills",
+		SpriteID:    69,
 		CreatedOn:   time.Now().UTC().String(),
 		UpdatedOn:   time.Now().UTC().String(),
 	},
