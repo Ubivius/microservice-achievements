@@ -12,12 +12,12 @@ import (
 // Validator library : https://github.com/go-playground/validator
 // Nic Jackson episode : https://github.com/nicholasjackson/building-microservices-youtube/blob/episode_7/product-api/data/validation.go
 
-// ValidateProduct a product with json validation and customer SKU validator
-func (product *Product) ValidateProduct() error {
+// ValidateAchievement a achievement with json validation and customer SKU validator
+func (achievement *Achievement) ValidateAchievement() error {
 	validate := validator.New()
 	validate.RegisterValidation("sku", validateSKU)
 
-	return validate.Struct(product)
+	return validate.Struct(achievement)
 }
 
 // Custom SKU validator

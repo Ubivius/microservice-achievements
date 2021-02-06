@@ -8,7 +8,7 @@ import (
 	"os/signal"
 	"time"
 
-	"github.com/Ubivius/microservice-template/handlers"
+	"github.com/Ubivius/microservice-achievements/handlers"
 	"github.com/gorilla/mux"
 )
 
@@ -17,29 +17,29 @@ func main() {
 	logger := log.New(os.Stdout, "Template", log.LstdFlags)
 
 	// Creating handlers
-	productHandler := handlers.NewProductsHandler(logger)
+	achievementHandler := handlers.NewAchievementsHandler(logger)
 
 	// Mux route handling with gorilla/mux
 	router := mux.NewRouter()
 
 	// Get Router
 	getRouter := router.Methods(http.MethodGet).Subrouter()
-	getRouter.HandleFunc("/products", productHandler.GetProducts)
-	getRouter.HandleFunc("/products/{id:[0-9]+}", productHandler.GetProductById)
+	getRouter.HandleFunc("/achievements", achievementHandler.GetAchievements)
+	getRouter.HandleFunc("/achievements/{id:[0-9]+}", achievementHandler.GetAchievementById)
 
 	// Put router
 	putRouter := router.Methods(http.MethodPut).Subrouter()
-	putRouter.HandleFunc("/products", productHandler.UpdateProducts)
-	putRouter.Use(productHandler.MiddlewareProductValidation)
+	putRouter.HandleFunc("/achievements", achievementHandler.UpdateAchievements)
+	putRouter.Use(achievementHandler.MiddlewareAchievementValidation)
 
 	// Post router
 	postRouter := router.Methods(http.MethodPost).Subrouter()
-	postRouter.HandleFunc("/products", productHandler.AddProduct)
-	postRouter.Use(productHandler.MiddlewareProductValidation)
+	postRouter.HandleFunc("/achievements", achievementHandler.AddAchievement)
+	postRouter.Use(achievementHandler.MiddlewareAchievementValidation)
 
 	// Delete router
 	deleteRouter := router.Methods(http.MethodDelete).Subrouter()
-	deleteRouter.HandleFunc("/products/{id:[0-9]+}", productHandler.Delete)
+	deleteRouter.HandleFunc("/achievements/{id:[0-9]+}", achievementHandler.Delete)
 
 	// Server setup
 	server := &http.Server{

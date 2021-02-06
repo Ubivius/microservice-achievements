@@ -5,12 +5,12 @@ import (
 	"time"
 )
 
-// Product specific errors
-var ErrorProductNotFound = fmt.Errorf("Product not found")
+// Achievement specific errors
+var ErrorAchievementNotFound = fmt.Errorf("Achievement not found")
 
-// Product defines the structure for an API product.
+// Achievement defines the structure for an API achievement.
 // Formatting done with json tags to the right. "-" : don't include when encoding to json
-type Product struct {
+type Achievement struct {
 	ID          int     `json:"id"`
 	Name        string  `json:"name" validate:"required"`
 	Description string  `json:"description"`
@@ -21,62 +21,62 @@ type Product struct {
 	DeletedOn   string  `json:"-"`
 }
 
-// Products is a collection of Product
-type Products []*Product
+// Achievements is a collection of Achievement
+type Achievements []*Achievement
 
 // All of these functions will become database calls in the future
-// GETTING PRODUCTS
+// GETTING ACHIEVEMENTS
 
-// Returns the list of products
-func GetProducts() Products {
-	return productList
+// Returns the list of achievements
+func GetAchievements() Achievements {
+	return achievementList
 }
 
-// Returns a single product with the given id
-func GetProductById(id int) (*Product, error) {
-	index := findIndexByProductID(id)
+// Returns a single achievement with the given id
+func GetAchievementById(id int) (*Achievement, error) {
+	index := findIndexByAchievementID(id)
 	if id == -1 {
-		return nil, ErrorProductNotFound
+		return nil, ErrorAchievementNotFound
 	}
-	return productList[index], nil
+	return achievementList[index], nil
 }
 
-// UPDATING PRODUCTS
+// UPDATING ACHIEVEMENTS
 
-// need to remove id int from parameters when product handler is updated
-func UpdateProduct(product *Product) error {
-	index := findIndexByProductID(product.ID)
+// need to remove id int from parameters when achievement handler is updated
+func UpdateAchievement(achievement *Achievement) error {
+	index := findIndexByAchievementID(achievement.ID)
 	if index == -1 {
-		return ErrorProductNotFound
+		return ErrorAchievementNotFound
 	}
-	productList[index] = product
+	achievementList[index] = achievement
 	return nil
 }
 
-// ADD A PRODUCT
-func AddProduct(product *Product) {
-	product.ID = getNextId()
-	productList = append(productList, product)
+// ADD A ACHIEVEMENT
+func AddAchievement(achievement *Achievement) {
+	achievement.ID = getNextId()
+	achievementList = append(achievementList, achievement)
 }
 
-// DELETING A PRODUCT
-func DeleteProduct(id int) error {
-	index := findIndexByProductID(id)
+// DELETING A ACHIEVEMENT
+func DeleteAchievement(id int) error {
+	index := findIndexByAchievementID(id)
 	if index == -1 {
-		return ErrorProductNotFound
+		return ErrorAchievementNotFound
 	}
 
 	// This should not work, probably needs ':' after index+1. To test
-	productList = append(productList[:index], productList[index+1])
+	achievementList = append(achievementList[:index], achievementList[index+1])
 
 	return nil
 }
 
-// Returns the index of a product in the database
-// Returns -1 when no product is found
-func findIndexByProductID(id int) int {
-	for index, product := range productList {
-		if product.ID == id {
+// Returns the index of a achievement in the database
+// Returns -1 when no achievement is found
+func findIndexByAchievementID(id int) int {
+	for index, achievement := range achievementList {
+		if achievement.ID == id {
 			return index
 		}
 	}
@@ -90,13 +90,13 @@ func findIndexByProductID(id int) int {
 
 // Finds the maximum index of our fake database and adds 1
 func getNextId() int {
-	lastProduct := productList[len(productList)-1]
-	return lastProduct.ID + 1
+	lastAchievement := achievementList[len(achievementList)-1]
+	return lastAchievement.ID + 1
 }
 
-// productList is a hard coded list of products for this
+// achievementList is a hard coded list of achievements for this
 // example data source. Should be replaced by database connection
-var productList = []*Product{
+var achievementList = []*Achievement{
 	{
 		ID:          1,
 		Name:        "Sword",

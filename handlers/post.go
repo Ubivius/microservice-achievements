@@ -3,14 +3,14 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/Ubivius/microservice-template/data"
+	"github.com/Ubivius/microservice-achievements/data"
 )
 
-// /POST /products
-// Creates a new product
-func (productHandler *ProductsHandler) AddProduct(responseWriter http.ResponseWriter, request *http.Request) {
-	productHandler.logger.Println("Handle POST Product")
-	product := request.Context().Value(KeyProduct{}).(*data.Product)
+// /POST /achievements
+// Creates a new achievement
+func (achievementHandler *AchievementsHandler) AddAchievement(responseWriter http.ResponseWriter, request *http.Request) {
+	achievementHandler.logger.Println("Handle POST Achievement")
+	achievement := request.Context().Value(KeyAchievement{}).(*data.Achievement)
 
-	data.AddProduct(product)
+	data.AddAchievement(achievement)
 }

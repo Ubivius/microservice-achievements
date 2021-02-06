@@ -3,43 +3,43 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/Ubivius/microservice-template/data"
+	"github.com/Ubivius/microservice-achievements/data"
 )
 
-// GET /products
-// Returns the full list of products
-func (productHandler *ProductsHandler) GetProducts(responseWriter http.ResponseWriter, request *http.Request) {
-	productHandler.logger.Println("Handle GET products")
-	productList := data.GetProducts()
-	err := data.ToJSON(productList, responseWriter)
+// GET /achievements
+// Returns the full list of achievements
+func (achievementHandler *AchievementsHandler) GetAchievements(responseWriter http.ResponseWriter, request *http.Request) {
+	achievementHandler.logger.Println("Handle GET achievements")
+	achievementList := data.GetAchievements()
+	err := data.ToJSON(achievementList, responseWriter)
 	if err != nil {
-		productHandler.logger.Println("[ERROR] serializing product", err)
+		achievementHandler.logger.Println("[ERROR] serializing achievement", err)
 		http.Error(responseWriter, "Unable to marshal json", http.StatusInternalServerError)
 	}
 }
 
-// GET /products/{id}
-// Returns a single product from the database
-func (productHandler *ProductsHandler) GetProductById(responseWriter http.ResponseWriter, request *http.Request) {
-	id := getProductId(request)
+// GET /achievements/{id}
+// Returns a single achievement from the database
+func (achievementHandler *AchievementsHandler) GetAchievementById(responseWriter http.ResponseWriter, request *http.Request) {
+	id := getAchievementId(request)
 
-	productHandler.logger.Println("[DEBUG] getting id", id)
+	achievementHandler.logger.Println("[DEBUG] getting id", id)
 
-	product, err := data.GetProductById(id)
+	achievement, err := data.GetAchievementById(id)
 	switch err {
 	case nil:
-	case data.ErrorProductNotFound:
-		productHandler.logger.Println("[ERROR] fetching product", err)
-		http.Error(responseWriter, "Product not found", http.StatusBadRequest)
+	case data.ErrorAchievementNotFound:
+		achievementHandler.logger.Println("[ERROR] fetching achievement", err)
+		http.Error(responseWriter, "Achievement not found", http.StatusBadRequest)
 		return
 	default:
-		productHandler.logger.Println("[ERROR] fetching product", err)
+		achievementHandler.logger.Println("[ERROR] fetching achievement", err)
 		http.Error(responseWriter, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	err = data.ToJSON(product, responseWriter)
+	err = data.ToJSON(achievement, responseWriter)
 	if err != nil {
-		productHandler.logger.Println("[ERROR] serializing product", err)
+		achievementHandler.logger.Println("[ERROR] serializing achievement", err)
 	}
 }

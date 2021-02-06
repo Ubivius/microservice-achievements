@@ -3,13 +3,13 @@ package data
 import "testing"
 
 func TestChecksValidation(t *testing.T) {
-	product := &Product{
+	achievement := &Achievement{
 		Name:  "Malcolm",
 		Price: 2.00,
 		SKU:   "abs-abs-abscd",
 	}
 
-	err := product.ValidateProduct()
+	err := achievement.ValidateAchievement()
 
 	if err != nil {
 		t.Fatal(err)

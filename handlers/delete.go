@@ -3,25 +3,25 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/Ubivius/microservice-template/data"
+	"github.com/Ubivius/microservice-achievements/data"
 )
 
-// DELETE /products/{id}
-// Deletes a product with specified id from the database
-func (productHandler *ProductsHandler) Delete(responseWriter http.ResponseWriter, request *http.Request) {
-	id := getProductId(request)
-	productHandler.logger.Println("Handle DELETE product", id)
+// DELETE /achievements/{id}
+// Deletes a achievement with specified id from the database
+func (achievementHandler *AchievementsHandler) Delete(responseWriter http.ResponseWriter, request *http.Request) {
+	id := getAchievementId(request)
+	achievementHandler.logger.Println("Handle DELETE achievement", id)
 
-	err := data.DeleteProduct(id)
-	if err == data.ErrorProductNotFound {
-		productHandler.logger.Println("[ERROR] deleting, id does not exist")
-		http.Error(responseWriter, "Product not found", http.StatusNotFound)
+	err := data.DeleteAchievement(id)
+	if err == data.ErrorAchievementNotFound {
+		achievementHandler.logger.Println("[ERROR] deleting, id does not exist")
+		http.Error(responseWriter, "Achievement not found", http.StatusNotFound)
 		return
 	}
 
 	if err != nil {
-		productHandler.logger.Println("[ERROR] deleting product", err)
-		http.Error(responseWriter, "Erro deleting poduct", http.StatusInternalServerError)
+		achievementHandler.logger.Println("[ERROR] deleting achievement", err)
+		http.Error(responseWriter, "Erro deleting achievement", http.StatusInternalServerError)
 		return
 	}
 

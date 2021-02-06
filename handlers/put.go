@@ -3,18 +3,18 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/Ubivius/microservice-template/data"
+	"github.com/Ubivius/microservice-achievements/data"
 )
 
-func (productHandler *ProductsHandler) UpdateProducts(responseWriter http.ResponseWriter, request *http.Request) {
-	product := request.Context().Value(KeyProduct{}).(data.Product)
-	productHandler.logger.Println("Handle PUT product", product.ID)
+func (achievementHandler *AchievementsHandler) UpdateAchievements(responseWriter http.ResponseWriter, request *http.Request) {
+	achievement := request.Context().Value(KeyAchievement{}).(data.Achievement)
+	achievementHandler.logger.Println("Handle PUT achievement", achievement.ID)
 
-	// Update product
-	err := data.UpdateProduct(&product)
-	if err == data.ErrorProductNotFound {
-		productHandler.logger.Println("[ERROR} product not found", err)
-		http.Error(responseWriter, "Product not found", http.StatusNotFound)
+	// Update achievement
+	err := data.UpdateAchievement(&achievement)
+	if err == data.ErrorAchievementNotFound {
+		achievementHandler.logger.Println("[ERROR} achievement not found", err)
+		http.Error(responseWriter, "Achievement not found", http.StatusNotFound)
 		return
 	}
 
