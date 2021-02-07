@@ -1,8 +1,6 @@
 package data
 
 import (
-	"regexp"
-
 	"github.com/go-playground/validator"
 )
 
@@ -12,23 +10,9 @@ import (
 // Validator library : https://github.com/go-playground/validator
 // Nic Jackson episode : https://github.com/nicholasjackson/building-microservices-youtube/blob/episode_7/product-api/data/validation.go
 
-// ValidateAchievement a achievement with json validation and customer SKU validator
+// ValidateAchievement a achievement with json validation
 func (achievement *Achievement) ValidateAchievement() error {
 	validate := validator.New()
-	validate.RegisterValidation("sku", validateSKU)
 
 	return validate.Struct(achievement)
-}
-
-// Custom SKU validator
-func validateSKU(fieldLevel validator.FieldLevel) bool {
-	// sku is of format abc-absd-dfsdf
-	re := regexp.MustCompile(`[a-z]+-[a-z]+-[a-z]+`)
-	matches := re.FindAllString(fieldLevel.Field().String(), -1)
-
-	if len(matches) != 1 {
-		return false
-	}
-
-	return true
 }
