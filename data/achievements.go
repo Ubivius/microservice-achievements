@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-// Achievement specific errors
+// ErrorAchievementNotFound : Achievement specific errors
 var ErrorAchievementNotFound = fmt.Errorf("Achievement not found")
 
 // Achievement defines the structure for an API achievement.
@@ -27,13 +27,13 @@ type Achievements []*Achievement
 // All of these functions will become database calls in the future
 // GETTING ACHIEVEMENTS
 
-// Returns the list of achievements
+// GetAchievements : Returns the list of achievements
 func GetAchievements() Achievements {
 	return achievementList
 }
 
-// Returns a single achievement with the given id
-func GetAchievementById(id int) (*Achievement, error) {
+// GetAchievementByID : Returns a single achievement with the given id
+func GetAchievementByID(id int) (*Achievement, error) {
 	index := findIndexByAchievementID(id)
 	if id == -1 {
 		return nil, ErrorAchievementNotFound
@@ -43,7 +43,7 @@ func GetAchievementById(id int) (*Achievement, error) {
 
 // UPDATING ACHIEVEMENTS
 
-// need to remove id int from parameters when achievement handler is updated
+// UpdateAchievement : need to remove id int from parameters when achievement handler is updated
 func UpdateAchievement(achievement *Achievement) error {
 	index := findIndexByAchievementID(achievement.ID)
 	if index == -1 {
@@ -53,13 +53,13 @@ func UpdateAchievement(achievement *Achievement) error {
 	return nil
 }
 
-// ADD A ACHIEVEMENT
+// AddAchievement : ADD A ACHIEVEMENT
 func AddAchievement(achievement *Achievement) {
-	achievement.ID = getNextId()
+	achievement.ID = getNextID()
 	achievementList = append(achievementList, achievement)
 }
 
-// DELETING A ACHIEVEMENT
+// DeleteAchievement : DELETING A ACHIEVEMENT
 func DeleteAchievement(id int) error {
 	index := findIndexByAchievementID(id)
 	if index == -1 {
@@ -89,7 +89,7 @@ func findIndexByAchievementID(id int) int {
 ///////////////////////////////////////////////////////////////////////////
 
 // Finds the maximum index of our fake database and adds 1
-func getNextId() int {
+func getNextID() int {
 	lastAchievement := achievementList[len(achievementList)-1]
 	return lastAchievement.ID + 1
 }

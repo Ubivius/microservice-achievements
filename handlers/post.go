@@ -6,8 +6,7 @@ import (
 	"github.com/Ubivius/microservice-achievements/data"
 )
 
-// /POST /achievements
-// Creates a new achievement
+// AddAchievement creates a new product from the received JSON
 func (achievementHandler *AchievementsHandler) AddAchievement(responseWriter http.ResponseWriter, request *http.Request) {
 	achievementHandler.logger.Println("Handle POST Achievement")
 	achievement := request.Context().Value(KeyAchievement{}).(*data.Achievement)

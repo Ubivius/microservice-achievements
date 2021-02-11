@@ -6,10 +6,9 @@ import (
 	"github.com/Ubivius/microservice-achievements/data"
 )
 
-// DELETE /achievements/{id}
-// Deletes a achievement with specified id from the database
+// Delete a achievement with specified id from the database
 func (achievementHandler *AchievementsHandler) Delete(responseWriter http.ResponseWriter, request *http.Request) {
-	id := getAchievementId(request)
+	id := getAchievementID(request)
 	achievementHandler.logger.Println("Handle DELETE achievement", id)
 
 	err := data.DeleteAchievement(id)

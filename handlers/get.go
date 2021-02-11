@@ -6,8 +6,7 @@ import (
 	"github.com/Ubivius/microservice-achievements/data"
 )
 
-// GET /achievements
-// Returns the full list of achievements
+// GetAchievements returns the full list of achievements
 func (achievementHandler *AchievementsHandler) GetAchievements(responseWriter http.ResponseWriter, request *http.Request) {
 	achievementHandler.logger.Println("Handle GET achievements")
 	achievementList := data.GetAchievements()
@@ -18,14 +17,13 @@ func (achievementHandler *AchievementsHandler) GetAchievements(responseWriter ht
 	}
 }
 
-// GET /achievements/{id}
-// Returns a single achievement from the database
-func (achievementHandler *AchievementsHandler) GetAchievementById(responseWriter http.ResponseWriter, request *http.Request) {
-	id := getAchievementId(request)
+// GetAchievementByID returns a single achievement from the database
+func (achievementHandler *AchievementsHandler) GetAchievementByID(responseWriter http.ResponseWriter, request *http.Request) {
+	id := getAchievementID(request)
 
 	achievementHandler.logger.Println("[DEBUG] getting id", id)
 
-	achievement, err := data.GetAchievementById(id)
+	achievement, err := data.GetAchievementByID(id)
 	switch err {
 	case nil:
 	case data.ErrorAchievementNotFound:
