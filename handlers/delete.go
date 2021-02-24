@@ -20,7 +20,7 @@ func (achievementHandler *AchievementsHandler) Delete(responseWriter http.Respon
 
 	if err != nil {
 		achievementHandler.logger.Println("[ERROR] deleting achievement", err)
-		http.Error(responseWriter, "Erro deleting achievement", http.StatusInternalServerError)
+		http.Error(responseWriter, "Error deleting achievement", http.StatusInternalServerError)
 		return
 	}
 

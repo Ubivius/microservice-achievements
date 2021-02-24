@@ -35,7 +35,7 @@ func GetAchievements() Achievements {
 // GetAchievementByID : Returns a single achievement with the given id
 func GetAchievementByID(id int) (*Achievement, error) {
 	index := findIndexByAchievementID(id)
-	if id == -1 {
+	if index == -1 {
 		return nil, ErrorAchievementNotFound
 	}
 	return achievementList[index], nil

@@ -26,6 +26,10 @@ func (achievementHandler *AchievementsHandler) GetAchievementByID(responseWriter
 	achievement, err := data.GetAchievementByID(id)
 	switch err {
 	case nil:
+		err = data.ToJSON(achievement, responseWriter)
+		if err != nil {
+			achievementHandler.logger.Println("[ERROR] serializing product", err)
+		}
 	case data.ErrorAchievementNotFound:
 		achievementHandler.logger.Println("[ERROR] fetching achievement", err)
 		http.Error(responseWriter, "Achievement not found", http.StatusBadRequest)
@@ -36,8 +40,4 @@ func (achievementHandler *AchievementsHandler) GetAchievementByID(responseWriter
 		return
 	}
 
-	err = data.ToJSON(achievement, responseWriter)
-	if err != nil {
-		achievementHandler.logger.Println("[ERROR] serializing achievement", err)
-	}
 }

@@ -12,4 +12,5 @@ func (achievementHandler *AchievementsHandler) AddAchievement(responseWriter htt
 	achievement := request.Context().Value(KeyAchievement{}).(*data.Achievement)
 
 	data.AddAchievement(achievement)
+	responseWriter.WriteHeader(http.StatusNoContent)
 }
