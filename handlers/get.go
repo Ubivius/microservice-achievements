@@ -28,7 +28,7 @@ func (achievementHandler *AchievementsHandler) GetAchievementByID(responseWriter
 	case nil:
 		err = data.ToJSON(achievement, responseWriter)
 		if err != nil {
-			achievementHandler.logger.Println("[ERROR] serializing product", err)
+			achievementHandler.logger.Println("[ERROR] serializing achievement", err)
 		}
 	case data.ErrorAchievementNotFound:
 		achievementHandler.logger.Println("[ERROR] fetching achievement", err)

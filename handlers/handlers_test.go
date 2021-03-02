@@ -122,6 +122,31 @@ func TestAddAchievement(t *testing.T) {
 	}
 }
 
+func TestUpdateNonExistantAchievement(t *testing.T) {
+	// Creating request body
+	body := &data.Achievement{
+		ID:          4,
+		Name:        "addName",
+		Description: "addDescription",
+		Condition:   "addCondition",
+		SpriteID:    1,
+	}
+
+	request := httptest.NewRequest(http.MethodPut, "/achievements", nil)
+	response := httptest.NewRecorder()
+
+	// Add the body to the context since we arent passing through middleware
+	ctx := context.WithValue(request.Context(), KeyAchievement{}, body)
+	request = request.WithContext(ctx)
+
+	achievementHandler := NewAchievementsHandler(NewTestLogger())
+	achievementHandler.UpdateAchievements(response, request)
+
+	if response.Code != http.StatusNotFound {
+		t.Errorf("Expected status code %d, but got %d", http.StatusNotFound, response.Code)
+	}
+}
+
 func TestUpdateAchievement(t *testing.T) {
 	// Creating request body
 	body := &data.Achievement{
