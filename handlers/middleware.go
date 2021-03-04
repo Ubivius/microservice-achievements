@@ -2,18 +2,19 @@ package handlers
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
 
 	"github.com/Ubivius/microservice-achievements/data"
 )
 
-// MiddlewareAchievementValidation is used to validate incoming product JSONS
+// MiddlewareAchievementValidation is used to validate incoming achievement JSONS
 func (achievementHandler *AchievementsHandler) MiddlewareAchievementValidation(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(responseWriter http.ResponseWriter, request *http.Request) {
 		achievement := &data.Achievement{}
 
-		err := data.FromJSON(achievement, request.Body)
+		err := json.NewDecoder(request.Body).Decode(achievement)
 		if err != nil {
 			achievementHandler.logger.Println("[ERROR] deserializing achievement", err)
 			http.Error(responseWriter, "Error reading achievement", http.StatusBadRequest)

@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/Ubivius/microservice-achievements/data"
@@ -10,7 +11,7 @@ import (
 func (achievementHandler *AchievementsHandler) GetAchievements(responseWriter http.ResponseWriter, request *http.Request) {
 	achievementHandler.logger.Println("Handle GET achievements")
 	achievementList := data.GetAchievements()
-	err := data.ToJSON(achievementList, responseWriter)
+	err := json.NewEncoder(responseWriter).Encode(achievementList)
 	if err != nil {
 		achievementHandler.logger.Println("[ERROR] serializing achievement", err)
 		http.Error(responseWriter, "Unable to marshal json", http.StatusInternalServerError)
@@ -26,6 +27,10 @@ func (achievementHandler *AchievementsHandler) GetAchievementByID(responseWriter
 	achievement, err := data.GetAchievementByID(id)
 	switch err {
 	case nil:
+		err = json.NewEncoder(responseWriter).Encode(achievement)
+		if err != nil {
+			achievementHandler.logger.Println("[ERROR] serializing achievement", err)
+		}
 	case data.ErrorAchievementNotFound:
 		achievementHandler.logger.Println("[ERROR] fetching achievement", err)
 		http.Error(responseWriter, "Achievement not found", http.StatusBadRequest)
@@ -36,8 +41,4 @@ func (achievementHandler *AchievementsHandler) GetAchievementByID(responseWriter
 		return
 	}
 
-	err = data.ToJSON(achievement, responseWriter)
-	if err != nil {
-		achievementHandler.logger.Println("[ERROR] serializing achievement", err)
-	}
 }
