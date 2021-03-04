@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/Ubivius/microservice-achievements/data"
@@ -10,7 +11,7 @@ import (
 func (achievementHandler *AchievementsHandler) GetAchievements(responseWriter http.ResponseWriter, request *http.Request) {
 	achievementHandler.logger.Println("Handle GET achievements")
 	achievementList := data.GetAchievements()
-	err := data.ToJSON(achievementList, responseWriter)
+	err := json.NewEncoder(responseWriter).Encode(achievementList)
 	if err != nil {
 		achievementHandler.logger.Println("[ERROR] serializing achievement", err)
 		http.Error(responseWriter, "Unable to marshal json", http.StatusInternalServerError)
@@ -26,7 +27,7 @@ func (achievementHandler *AchievementsHandler) GetAchievementByID(responseWriter
 	achievement, err := data.GetAchievementByID(id)
 	switch err {
 	case nil:
-		err = data.ToJSON(achievement, responseWriter)
+		err = json.NewEncoder(responseWriter).Encode(achievement)
 		if err != nil {
 			achievementHandler.logger.Println("[ERROR] serializing achievement", err)
 		}
