@@ -3,7 +3,7 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/Ubivius/microservice-achievements/data"
+	"github.com/Ubivius/microservice-achievements/pkg/data"
 )
 
 // UpdateAchievements updates the achievement with the ID specified in the received JSON achievement

@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/Ubivius/microservice-achievements/data"
+	"github.com/Ubivius/microservice-achievements/pkg/data"
 )
 
 // GetAchievements returns the full list of achievements

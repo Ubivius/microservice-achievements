@@ -3,7 +3,7 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/Ubivius/microservice-achievements/data"
+	"github.com/Ubivius/microservice-achievements/pkg/data"
 )
 
 // Delete a achievement with specified id from the database
