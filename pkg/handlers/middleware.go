@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/Ubivius/microservice-achievements/data"
+	"github.com/Ubivius/microservice-achievements/pkg/data"
 )
 
 // MiddlewareAchievementValidation is used to validate incoming achievement JSONS
