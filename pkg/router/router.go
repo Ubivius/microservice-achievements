@@ -1,7 +1,6 @@
 package router
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/Ubivius/microservice-achievements/pkg/handlers"
@@ -9,7 +8,8 @@ import (
 )
 
 // New : Mux route handling with gorilla/mux
-func New(achievementHandler *handlers.AchievementsHandler, logger *log.Logger) *mux.Router {
+func New(achievementHandler *handlers.AchievementsHandler) *mux.Router {
+	log.Info("Starting router")
 	router := mux.NewRouter()
 
 	// Get Router

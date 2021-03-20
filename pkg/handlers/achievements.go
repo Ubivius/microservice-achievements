@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/Ubivius/microservice-achievements/pkg/database"
@@ -13,13 +12,12 @@ type KeyAchievement struct{}
 
 // AchievementsHandler used for getting and updating achievements
 type AchievementsHandler struct {
-	logger *log.Logger
-	db     database.AchievementDB
+	db database.AchievementDB
 }
 
 // NewAchievementsHandler returns a pointer to a AchievementsHandler with the logger passed as a parameter
-func NewAchievementsHandler(logger *log.Logger, db database.AchievementDB) *AchievementsHandler {
-	return &AchievementsHandler{logger, db}
+func NewAchievementsHandler(db database.AchievementDB) *AchievementsHandler {
+	return &AchievementsHandler{db}
 }
 
 // getAchievementID extracts the achievement ID from the URL

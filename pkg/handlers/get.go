@@ -9,11 +9,11 @@ import (
 
 // GetAchievements returns the full list of achievements
 func (achievementHandler *AchievementsHandler) GetAchievements(responseWriter http.ResponseWriter, request *http.Request) {
-	achievementHandler.logger.Println("Handle GET achievements")
+	log.Info("GetAchievements request")
 	achievementList := achievementHandler.db.GetAchievements()
 	err := json.NewEncoder(responseWriter).Encode(achievementList)
 	if err != nil {
-		achievementHandler.logger.Println("[ERROR] serializing achievement", err)
+		log.Error(err, "Error serializing achievement")
 		http.Error(responseWriter, "Unable to marshal json", http.StatusInternalServerError)
 	}
 }
@@ -22,7 +22,7 @@ func (achievementHandler *AchievementsHandler) GetAchievements(responseWriter ht
 func (achievementHandler *AchievementsHandler) GetAchievementByID(responseWriter http.ResponseWriter, request *http.Request) {
 	id := getAchievementID(request)
 
-	achievementHandler.logger.Println("[DEBUG] getting id", id)
+	log.Info("GetAchievementByID request", "id", id)
 
 	achievement, err := achievementHandler.db.GetAchievementByID(id)
 	
@@ -30,14 +30,14 @@ func (achievementHandler *AchievementsHandler) GetAchievementByID(responseWriter
 	case nil:
 		err = json.NewEncoder(responseWriter).Encode(achievement)
 		if err != nil {
-			achievementHandler.logger.Println("[ERROR] serializing achievement", err)
+			log.Error(err, "Error serializing achievement")
 		}
 	case data.ErrorAchievementNotFound:
-		achievementHandler.logger.Println("[ERROR] fetching achievement", err)
+		log.Error(err, "Achievement not found")
 		http.Error(responseWriter, "Achievement not found", http.StatusBadRequest)
 		return
 	default:
-		achievementHandler.logger.Println("[ERROR] fetching achievement", err)
+		log.Error(err, "Error getting achievement")
 		http.Error(responseWriter, err.Error(), http.StatusInternalServerError)
 		return
 	}

@@ -2,7 +2,7 @@ package database
 
 import (
 	"context"
-	"log"
+	"os"
 	"time"
 
 	"github.com/Ubivius/microservice-achievements/pkg/data"
@@ -15,15 +15,15 @@ import (
 type MongoAchievements struct {
 	client     *mongo.Client
 	collection *mongo.Collection
-	logger     *log.Logger
 }
 
-func NewMongoAchievements(l *log.Logger) AchievementDB {
-	mp := &MongoAchievements{logger: l}
+func NewMongoAchievements() AchievementDB {
+	mp := &MongoAchievements{}
 	err := mp.Connect()
 	// If connect fails, kill the program
 	if err != nil {
-		mp.logger.Fatal(err)
+		log.Error(err, "MongoDB setup failed")
+		os.Exit(1)
 	}
 	return mp
 }
@@ -35,16 +35,18 @@ func (mp *MongoAchievements) Connect() error {
 	// Connect to MongoDB
 	client, err := mongo.Connect(context.TODO(), clientOptions)
 	if err != nil || client == nil {
-		mp.logger.Fatalln("Failed to connect to database. Shutting down service")
+		log.Error(err, "Failed to connect to database. Shutting down service")
+		os.Exit(1)
 	}
 
 	// Ping DB
 	err = client.Ping(context.TODO(), nil)
 	if err != nil {
-		mp.logger.Fatal(err)
+		log.Error(err, "Failed to ping database. Shutting down service")
+		os.Exit(1)
 	}
 
-	log.Println("Connection to MongoDB established")
+	log.Info("Connection to MongoDB established")
 
 	collection := client.Database("test").Collection("achievements")
 
@@ -57,9 +59,7 @@ func (mp *MongoAchievements) Connect() error {
 func (mp *MongoAchievements) CloseDB() {
 	err := mp.client.Disconnect(context.TODO())
 	if err != nil {
-		mp.logger.Println(err)
-	} else {
-		log.Println("Connection to MongoDB closed.")
+		log.Error(err, "Error while disconnecting from database")
 	}
 }
 
@@ -70,7 +70,7 @@ func (mp *MongoAchievements) GetAchievements() data.Achievements {
 	// Find returns a cursor that must be iterated through
 	cursor, err := mp.collection.Find(context.TODO(), bson.D{})
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err, "Error getting achievements from database")
 	}
 
 	// Iterating through cursor
@@ -78,13 +78,13 @@ func (mp *MongoAchievements) GetAchievements() data.Achievements {
 		var result data.Achievement
 		err := cursor.Decode(&result)
 		if err != nil {
-			log.Fatal(err)
+			log.Error(err, "Error decoding achievement from database")
 		}
 		achievements = append(achievements, &result)
 	}
 
 	if err := cursor.Err(); err != nil {
-		log.Fatal(err)
+		log.Error(err, "Error in cursor after iteration")
 	}
 
 	// Close the cursor once finished
@@ -120,7 +120,7 @@ func (mp *MongoAchievements) UpdateAchievement(achievement *data.Achievement) er
 	// Update a single item in the database with the values in update that match the filter
 	_, err := mp.collection.UpdateOne(context.TODO(), filter, update)
 	if err != nil {
-		log.Println(err)
+		log.Error(err, "Error updating achievement.")
 	}
 
 	return err
@@ -138,7 +138,7 @@ func (mp *MongoAchievements) AddAchievement(achievement *data.Achievement) error
 		return err
 	}
 
-	log.Println("Inserting a document: ", insertResult.InsertedID)
+	log.Info("Inserting achievement", "Inserted ID", insertResult.InsertedID)
 	return nil
 }
 
@@ -149,9 +149,9 @@ func (mp *MongoAchievements) DeleteAchievement(id string) error {
 	// Delete a single item matching the filter
 	result, err := mp.collection.DeleteOne(context.TODO(), filter)
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err, "Error deleting achievement")
 	}
 
-	log.Printf("Deleted %v documents in the achievements collection\n", result.DeletedCount)
+	log.Info("Deleted documents in achievements collection", "delete_count", result.DeletedCount)
 	return nil
 }

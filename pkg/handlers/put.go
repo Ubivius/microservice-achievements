@@ -9,12 +9,12 @@ import (
 // UpdateAchievements updates the achievement with the ID specified in the received JSON achievement
 func (achievementHandler *AchievementsHandler) UpdateAchievements(responseWriter http.ResponseWriter, request *http.Request) {
 	achievement := request.Context().Value(KeyAchievement{}).(*data.Achievement)
-	achievementHandler.logger.Println("Handle PUT achievement", achievement.ID)
+	log.Info("UpdateAchievements request", "id", achievement.ID)
 
 	// Update achievement
 	err := achievementHandler.db.UpdateAchievement(achievement)
 	if err == data.ErrorAchievementNotFound {
-		achievementHandler.logger.Println("[ERROR} achievement not found", err)
+		log.Error(err, "Achievement not found")
 		http.Error(responseWriter, "Achievement not found", http.StatusNotFound)
 		return
 	}

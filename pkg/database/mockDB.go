@@ -1,7 +1,6 @@
 package database
 
 import (
-	"log"
 	"time"
 
 	"github.com/Ubivius/microservice-achievements/pkg/data"
@@ -12,6 +11,7 @@ type MockAchievements struct {
 }
 
 func NewMockAchievements() AchievementDB {
+	log.Info("Connecting to mock database")
 	return &MockAchievements{}
 }
 
@@ -20,7 +20,7 @@ func (mp *MockAchievements) Connect() error {
 }
 
 func (mp *MockAchievements) CloseDB() {
-	log.Println("Mocked DB connection closed")
+	log.Info("Mocked DB connection closed")
 }
 
 func (mp *MockAchievements) GetAchievements() data.Achievements {

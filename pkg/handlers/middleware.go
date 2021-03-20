@@ -16,7 +16,7 @@ func (achievementHandler *AchievementsHandler) MiddlewareAchievementValidation(n
 
 		err := json.NewDecoder(request.Body).Decode(achievement)
 		if err != nil {
-			achievementHandler.logger.Println("[ERROR] deserializing achievement", err)
+			log.Error(err, "Error deserializing achievement")
 			http.Error(responseWriter, "Error reading achievement", http.StatusBadRequest)
 			return
 		}
@@ -24,7 +24,7 @@ func (achievementHandler *AchievementsHandler) MiddlewareAchievementValidation(n
 		// validate the achievement
 		err = achievement.ValidateAchievement()
 		if err != nil {
-			achievementHandler.logger.Println("[ERROR] validating achievement", err)
+			log.Error(err, "Error validating achievement")
 			http.Error(responseWriter, fmt.Sprintf("Error validating achievement: %s", err), http.StatusBadRequest)
 			return
 		}

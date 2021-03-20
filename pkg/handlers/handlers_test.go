@@ -2,10 +2,8 @@ package handlers
 
 import (
 	"context"
-	"log"
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"strings"
 	"testing"
 
@@ -15,12 +13,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// Move to util package in Sprint 9, should be a testing specific logger
-func NewTestLogger() *log.Logger {
-	return log.New(os.Stdout, "Tests", log.LstdFlags)
-}
-
-func NewProductDB() database.AchievementDB {
+func newAchievementDB() database.AchievementDB {
 	return database.NewMockAchievements()
 }
 
@@ -28,13 +21,13 @@ func TestGetAchievements(t *testing.T) {
 	request := httptest.NewRequest(http.MethodGet, "/achievements", nil)
 	response := httptest.NewRecorder()
 
-	achievementHandler := NewAchievementsHandler(NewTestLogger(), NewProductDB())
+	achievementHandler := NewAchievementsHandler(newAchievementDB())
 	achievementHandler.GetAchievements(response, request)
 
 	if response.Code != 200 {
 		t.Errorf("Expected status code 200 but got : %d", response.Code)
 	}
-	log.Println(response.Body.String())
+
 	if !strings.Contains(response.Body.String(), "a2181017-5c53-422b-b6bc-036b27c04fc8") || !strings.Contains(response.Body.String(), "e2382ea2-b5fa-4506-aa9d-d338aa52af44") {
 		t.Error("Missing elements from expected results")
 	}
@@ -44,7 +37,7 @@ func TestGetExistingAchievementByID(t *testing.T) {
 	request := httptest.NewRequest(http.MethodGet, "/achievements/1", nil)
 	response := httptest.NewRecorder()
 
-	achievementHandler := NewAchievementsHandler(NewTestLogger(), NewProductDB())
+	achievementHandler := NewAchievementsHandler(newAchievementDB())
 
 	// Mocking gorilla/mux vars
 	vars := map[string]string{
@@ -66,7 +59,7 @@ func TestGetNonExistingAchievementByID(t *testing.T) {
 	request := httptest.NewRequest(http.MethodGet, "/achievements/4", nil)
 	response := httptest.NewRecorder()
 
-	achievementHandler := NewAchievementsHandler(NewTestLogger(), NewProductDB())
+	achievementHandler := NewAchievementsHandler(newAchievementDB())
 
 	// Mocking gorilla/mux vars
 	vars := map[string]string{
@@ -88,7 +81,7 @@ func TestDeleteNonExistantAchievement(t *testing.T) {
 	request := httptest.NewRequest(http.MethodDelete, "/achievements/4", nil)
 	response := httptest.NewRecorder()
 
-	achievementHandler := NewAchievementsHandler(NewTestLogger(), NewProductDB())
+	achievementHandler := NewAchievementsHandler(newAchievementDB())
 
 	// Mocking gorilla/mux vars
 	vars := map[string]string{
@@ -121,7 +114,7 @@ func TestAddAchievement(t *testing.T) {
 	ctx := context.WithValue(request.Context(), KeyAchievement{}, body)
 	request = request.WithContext(ctx)
 
-	achievementHandler := NewAchievementsHandler(NewTestLogger(), NewProductDB())
+	achievementHandler := NewAchievementsHandler(newAchievementDB())
 	achievementHandler.AddAchievement(response, request)
 
 	if response.Code != http.StatusNoContent {
@@ -146,7 +139,7 @@ func TestUpdateNonExistantAchievement(t *testing.T) {
 	ctx := context.WithValue(request.Context(), KeyAchievement{}, body)
 	request = request.WithContext(ctx)
 
-	achievementHandler := NewAchievementsHandler(NewTestLogger(), NewProductDB())
+	achievementHandler := NewAchievementsHandler(newAchievementDB())
 	achievementHandler.UpdateAchievements(response, request)
 
 	if response.Code != http.StatusNotFound {
@@ -171,7 +164,7 @@ func TestUpdateAchievement(t *testing.T) {
 	ctx := context.WithValue(request.Context(), KeyAchievement{}, body)
 	request = request.WithContext(ctx)
 
-	achievementHandler := NewAchievementsHandler(NewTestLogger(), NewProductDB())
+	achievementHandler := NewAchievementsHandler(newAchievementDB())
 	achievementHandler.UpdateAchievements(response, request)
 
 	if response.Code != http.StatusNoContent {
@@ -183,7 +176,7 @@ func TestDeleteExistingAchievement(t *testing.T) {
 	request := httptest.NewRequest(http.MethodDelete, "/achievements/1", nil)
 	response := httptest.NewRecorder()
 
-	achievementHandler := NewAchievementsHandler(NewTestLogger(), NewProductDB())
+	achievementHandler := NewAchievementsHandler(newAchievementDB())
 
 	// Mocking gorilla/mux vars
 	vars := map[string]string{
