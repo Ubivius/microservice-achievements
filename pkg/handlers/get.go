@@ -10,7 +10,7 @@ import (
 // GetAchievements returns the full list of achievements
 func (achievementHandler *AchievementsHandler) GetAchievements(responseWriter http.ResponseWriter, request *http.Request) {
 	achievementHandler.logger.Println("Handle GET achievements")
-	achievementList := data.GetAchievements()
+	achievementList := achievementHandler.db.GetAchievements()
 	err := json.NewEncoder(responseWriter).Encode(achievementList)
 	if err != nil {
 		achievementHandler.logger.Println("[ERROR] serializing achievement", err)
@@ -24,7 +24,8 @@ func (achievementHandler *AchievementsHandler) GetAchievementByID(responseWriter
 
 	achievementHandler.logger.Println("[DEBUG] getting id", id)
 
-	achievement, err := data.GetAchievementByID(id)
+	achievement, err := achievementHandler.db.GetAchievementByID(id)
+	
 	switch err {
 	case nil:
 		err = json.NewEncoder(responseWriter).Encode(achievement)

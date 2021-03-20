@@ -11,6 +11,11 @@ func (achievementHandler *AchievementsHandler) AddAchievement(responseWriter htt
 	achievementHandler.logger.Println("Handle POST Achievement")
 	achievement := request.Context().Value(KeyAchievement{}).(*data.Achievement)
 
-	data.AddAchievement(achievement)
-	responseWriter.WriteHeader(http.StatusNoContent)
+	err := achievementHandler.db.AddAchievement(achievement)
+
+	if err != nil {
+		responseWriter.WriteHeader(http.StatusBadRequest)
+	} else {
+		responseWriter.WriteHeader(http.StatusNoContent)
+	}
 }

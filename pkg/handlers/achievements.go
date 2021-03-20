@@ -3,8 +3,8 @@ package handlers
 import (
 	"log"
 	"net/http"
-	"strconv"
 
+	"github.com/Ubivius/microservice-achievements/pkg/database"
 	"github.com/gorilla/mux"
 )
 
@@ -14,21 +14,20 @@ type KeyAchievement struct{}
 // AchievementsHandler used for getting and updating achievements
 type AchievementsHandler struct {
 	logger *log.Logger
+	db     database.AchievementDB
 }
 
 // NewAchievementsHandler returns a pointer to a AchievementsHandler with the logger passed as a parameter
-func NewAchievementsHandler(logger *log.Logger) *AchievementsHandler {
-	return &AchievementsHandler{logger}
+func NewAchievementsHandler(logger *log.Logger, db database.AchievementDB) *AchievementsHandler {
+	return &AchievementsHandler{logger, db}
 }
 
 // getAchievementID extracts the achievement ID from the URL
 // The verification of this variable is handled by gorilla/mux
 // We panic if it is not valid because that means gorilla is failing
-func getAchievementID(request *http.Request) int {
+func getAchievementID(request *http.Request) string {
 	vars := mux.Vars(request)
-	id, err := strconv.Atoi(vars["id"])
-	if err != nil {
-		panic(err)
-	}
+	id := vars["id"]
+	
 	return id
 }
