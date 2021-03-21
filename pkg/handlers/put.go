@@ -13,12 +13,16 @@ func (achievementHandler *AchievementsHandler) UpdateAchievements(responseWriter
 
 	// Update achievement
 	err := achievementHandler.db.UpdateAchievement(achievement)
-	if err == data.ErrorAchievementNotFound {
+	switch err {
+	case nil:
+		responseWriter.WriteHeader(http.StatusNoContent)
+	case data.ErrorAchievementNotFound:
 		log.Error(err, "Achievement not found")
 		http.Error(responseWriter, "Achievement not found", http.StatusNotFound)
 		return
+	default:
+		log.Error(err, "Error updating achievement")
+		http.Error(responseWriter, err.Error(), http.StatusInternalServerError)
+		return
 	}
-
-	// Returns status, no content required
-	responseWriter.WriteHeader(http.StatusNoContent)
 }
