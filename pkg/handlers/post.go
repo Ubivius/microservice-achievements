@@ -16,6 +16,7 @@ func (achievementHandler *AchievementsHandler) AddAchievement(responseWriter htt
 	switch err {
 	case nil:
 		responseWriter.WriteHeader(http.StatusNoContent)
+		return
 	default:
 		log.Error(err, "Error adding achievement")
 		http.Error(responseWriter, err.Error(), http.StatusInternalServerError)

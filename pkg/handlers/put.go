@@ -16,6 +16,7 @@ func (achievementHandler *AchievementsHandler) UpdateAchievements(responseWriter
 	switch err {
 	case nil:
 		responseWriter.WriteHeader(http.StatusNoContent)
+		return
 	case data.ErrorAchievementNotFound:
 		log.Error(err, "Achievement not found")
 		http.Error(responseWriter, "Achievement not found", http.StatusNotFound)

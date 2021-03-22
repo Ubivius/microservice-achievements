@@ -22,7 +22,6 @@ func NewAchievementsHandler(db database.AchievementDB) *AchievementsHandler {
 
 // getAchievementID extracts the achievement ID from the URL
 // The verification of this variable is handled by gorilla/mux
-// We panic if it is not valid because that means gorilla is failing
 func getAchievementID(request *http.Request) string {
 	vars := mux.Vars(request)
 	id := vars["id"]

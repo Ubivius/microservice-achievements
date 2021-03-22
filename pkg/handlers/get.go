@@ -32,6 +32,7 @@ func (achievementHandler *AchievementsHandler) GetAchievementByID(responseWriter
 		if err != nil {
 			log.Error(err, "Error serializing achievement")
 		}
+		return
 	case data.ErrorAchievementNotFound:
 		log.Error(err, "Achievement not found")
 		http.Error(responseWriter, "Achievement not found", http.StatusBadRequest)

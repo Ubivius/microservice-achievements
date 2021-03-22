@@ -15,6 +15,7 @@ func (achievementHandler *AchievementsHandler) Delete(responseWriter http.Respon
 	switch err {
 	case nil:
 		responseWriter.WriteHeader(http.StatusNoContent)
+		return
 	case data.ErrorAchievementNotFound:
 		log.Error(err, "Error deleting achievement, id does not exist")
 		http.Error(responseWriter, "Achievement not found", http.StatusNotFound)
