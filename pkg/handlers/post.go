@@ -8,9 +8,18 @@ import (
 
 // AddAchievement creates a new achievement from the received JSON
 func (achievementHandler *AchievementsHandler) AddAchievement(responseWriter http.ResponseWriter, request *http.Request) {
-	achievementHandler.logger.Println("Handle POST Achievement")
+	log.Info("AddAchievement request")
 	achievement := request.Context().Value(KeyAchievement{}).(*data.Achievement)
 
-	data.AddAchievement(achievement)
-	responseWriter.WriteHeader(http.StatusNoContent)
+	err := achievementHandler.db.AddAchievement(achievement)
+
+	switch err {
+	case nil:
+		responseWriter.WriteHeader(http.StatusNoContent)
+		return
+	default:
+		log.Error(err, "Error adding achievement")
+		http.Error(responseWriter, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }

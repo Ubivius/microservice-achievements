@@ -2,21 +2,29 @@ package main
 
 import (
 	"context"
-	"log"
+	"flag"
 	"net/http"
 	"os"
 	"os/signal"
 	"time"
 
+	"github.com/Ubivius/microservice-achievements/pkg/database"
 	"github.com/Ubivius/microservice-achievements/pkg/handlers"
 	"github.com/Ubivius/microservice-achievements/pkg/router"
 	"go.opentelemetry.io/otel/exporters/stdout"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
+	logf "sigs.k8s.io/controller-runtime/pkg/log"
+	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 )
 
+var log = logf.Log.WithName("achievements-main")
+
 func main() {
-	// Logger
-	logger := log.New(os.Stdout, "Achievements", log.LstdFlags)
+	// Starting k8s logger
+	opts := zap.Options{}
+	opts.BindFlags(flag.CommandLine)
+	newLogger := zap.New(zap.UseFlagOptions(&opts), zap.WriteTo(os.Stdout))
+	logf.SetLogger(newLogger.WithName("log"))
 
 
 	// Initialising open telemetry
@@ -25,7 +33,7 @@ func main() {
 		stdout.WithPrettyPrint(),
 	)
 	if err != nil {
-		logger.Fatal("Failed to initialize stdout export pipeline : ", err)
+		log.Error(err, "Failed to initialize stdout export pipeline")
 	}
 
 	// Creating tracer provider
@@ -34,12 +42,15 @@ func main() {
 	tracerProvider := sdktrace.NewTracerProvider(sdktrace.WithSpanProcessor(batchSpanProcessor))
 	defer func() { _ = tracerProvider.Shutdown(ctx) }()
 
+	// Database init
+	db := database.NewMongoAchievements()
+
 
 	// Creating handlers
-	achievementHandler := handlers.NewAchievementsHandler(logger)
+	achievementHandler := handlers.NewAchievementsHandler(db)
 	
 	// Router setup
-	r := router.New(achievementHandler, logger)
+	r := router.New(achievementHandler)
 
 	// Server setup
 	server := &http.Server{
@@ -50,11 +61,10 @@ func main() {
 	}
 
 	go func() {
-		logger.Println("Starting server on port ", server.Addr)
+		log.Info("Starting server", "port", server.Addr)
 		err := server.ListenAndServe()
 		if err != nil {
-			logger.Println("Error starting server : ", err)
-			logger.Fatal(err)
+			log.Error(err, "Server error")
 		}
 	}()
 
@@ -63,7 +73,10 @@ func main() {
 	signal.Notify(signalChannel, os.Interrupt)
 	receivedSignal := <-signalChannel
 
-	logger.Println("Received terminate, beginning graceful shutdown", receivedSignal)
+	log.Info("Received terminate, beginning graceful shutdown", "received_signal", receivedSignal.String())
+
+	// DB connection shutdown
+	db.CloseDB()
 
 	// Server shutdown
 	timeoutContext, cancel := context.WithTimeout(context.Background(), 30*time.Second)
