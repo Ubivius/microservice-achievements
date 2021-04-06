@@ -28,7 +28,7 @@ func TestMongoDBAddAchievementIntegration(t *testing.T) {
 		Name:        "testName",
 		Description: "testDescription",
 		Condition:   "testCondition",
-		SpriteID:    1,
+		SpriteID:    uuid.NewString(),
 	}
 
 	mp := NewMongoAchievements()
@@ -49,7 +49,7 @@ func TestMongoDBUpdateAchievementIntegration(t *testing.T) {
 		Name:        "testName",
 		Description: "testDescription",
 		Condition:   "testCondition",
-		SpriteID:    1,
+		SpriteID:    uuid.NewString(),
 	}
 
 	mp := NewMongoAchievements()

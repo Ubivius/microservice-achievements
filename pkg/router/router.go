@@ -17,6 +17,10 @@ func New(achievementHandler *handlers.AchievementsHandler) *mux.Router {
 	getRouter.HandleFunc("/achievements", achievementHandler.GetAchievements)
 	getRouter.HandleFunc("/achievements/{id:[0-9a-z-]+}", achievementHandler.GetAchievementByID)
 
+	//Health Check
+	getRouter.HandleFunc("/health/live", achievementHandler.LivenessCheck)
+	getRouter.HandleFunc("/health/ready", achievementHandler.ReadinessCheck)
+
 	// Put router
 	putRouter := router.Methods(http.MethodPut).Subrouter()
 	putRouter.HandleFunc("/achievements", achievementHandler.UpdateAchievements)

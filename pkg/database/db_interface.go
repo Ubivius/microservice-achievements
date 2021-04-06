@@ -12,5 +12,6 @@ type AchievementDB interface {
 	AddAchievement(achievement *data.Achievement) error
 	DeleteAchievement(id string) error
 	Connect() error
+	PingDB() error
 	CloseDB()
 }
