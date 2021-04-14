@@ -4,15 +4,21 @@ import (
 	"testing"
 
 	"github.com/Ubivius/microservice-achievements/pkg/data"
+	"github.com/Ubivius/microservice-achievements/pkg/resources"
 	"github.com/google/uuid"
 )
+
+func newResourceManager() resources.ResourceManager {
+	return resources.NewMockResources()
+}
+
 
 func TestMongoDBConnectionAndShutdownIntegration(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Test skipped during unit tests")
 	}
 
-	mp := NewMongoAchievements()
+	mp := NewMongoAchievements(newResourceManager())
 	if mp == nil {
 		t.Fail()
 	}
@@ -31,7 +37,7 @@ func TestMongoDBAddAchievementIntegration(t *testing.T) {
 		SpriteID:    uuid.NewString(),
 	}
 
-	mp := NewMongoAchievements()
+	mp := NewMongoAchievements(newResourceManager())
 	err := mp.AddAchievement(achievement)
 	if err != nil {
 		t.Errorf("Failed to add achievement to database")
@@ -52,7 +58,7 @@ func TestMongoDBUpdateAchievementIntegration(t *testing.T) {
 		SpriteID:    uuid.NewString(),
 	}
 
-	mp := NewMongoAchievements()
+	mp := NewMongoAchievements(newResourceManager())
 	err := mp.UpdateAchievement(achievement)
 	if err != nil {
 		t.Fail()
@@ -65,7 +71,7 @@ func TestMongoDBGetAchievementsIntegration(t *testing.T) {
 		t.Skip("Test skipped during unit tests")
 	}
 
-	mp := NewMongoAchievements()
+	mp := NewMongoAchievements(newResourceManager())
 	achievements := mp.GetAchievements()
 	if achievements == nil {
 		t.Fail()
@@ -79,7 +85,7 @@ func TestMongoDBGetAchievementByIDIntegration(t *testing.T) {
 		t.Skip("Test skipped during unit tests")
 	}
 
-	mp := NewMongoAchievements()
+	mp := NewMongoAchievements(newResourceManager())
 	_, err := mp.GetAchievementByID("c9ddfb2f-fc4d-40f3-87c0-f6713024a993")
 	if err != nil {
 		t.Fail()
