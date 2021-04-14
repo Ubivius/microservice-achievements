@@ -48,12 +48,16 @@ func (mp *MongoAchievements) Connect() error {
 
 	log.Info("Connection to MongoDB established")
 
-	collection := client.Database("test").Collection("achievements")
+	collection := client.Database("ubivius").Collection("achievements")
 
 	// Assign client and collection to the MongoAchievements struct
 	mp.collection = collection
 	mp.client = client
 	return nil
+}
+
+func (mp *MongoAchievements) PingDB() error {
+	return mp.client.Ping(context.TODO(), nil)
 }
 
 func (mp *MongoAchievements) CloseDB() {

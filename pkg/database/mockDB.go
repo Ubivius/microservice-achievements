@@ -19,6 +19,10 @@ func (mp *MockAchievements) Connect() error {
 	return nil
 }
 
+func (mp *MockAchievements) PingDB() error {
+	return nil
+}
+
 func (mp *MockAchievements) CloseDB() {
 	log.Info("Mocked DB connection closed")
 }
@@ -82,7 +86,7 @@ var achievementList = []*data.Achievement{
 		Name:        "10 wins",
 		Description: "Easy Peasy Lemon Squeezy",
 		Condition:   "Accumulate 10 wins",
-		SpriteID:    14,
+		SpriteID:    "a2181017-5c53-422b-b6bc-036b27c04fc8",
 		CreatedOn:   time.Now().UTC().String(),
 		UpdatedOn:   time.Now().UTC().String(),
 	},
@@ -91,7 +95,7 @@ var achievementList = []*data.Achievement{
 		Name:        "100 kills",
 		Description: "Monster hunter",
 		Condition:   "Accumulate 100 kills",
-		SpriteID:    69,
+		SpriteID:    "e2382ea2-b5fa-4506-aa9d-d338aa52af44",
 		CreatedOn:   time.Now().UTC().String(),
 		UpdatedOn:   time.Now().UTC().String(),
 	},

@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/Ubivius/microservice-achievements/pkg/data"
+	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 )
 
@@ -17,7 +18,7 @@ func TestValidationMiddlewareWithValidBody(t *testing.T) {
 		Name:        "addName",
 		Description: "addDescription",
 		Condition:   "addCondition",
-		SpriteID:    1,
+		SpriteID:    uuid.NewString(),
 	}
 	bodyBytes, _ := json.Marshal(body)
 
@@ -44,7 +45,7 @@ func TestValidationMiddlewareWithNoName(t *testing.T) {
 	body := &data.Achievement{
 		Description: "addDescription",
 		Condition:   "addCondition",
-		SpriteID:    1,
+		SpriteID:    uuid.NewString(),
 	}
 	bodyBytes, err := json.Marshal(body)
 	if err != nil {

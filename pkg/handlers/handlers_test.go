@@ -104,7 +104,7 @@ func TestAddAchievement(t *testing.T) {
 		Name:        "addName",
 		Description: "addDescription",
 		Condition:   "addCondition",
-		SpriteID:    1,
+		SpriteID:    uuid.NewString(),
 	}
 
 	request := httptest.NewRequest(http.MethodPost, "/achievements", nil)
@@ -129,7 +129,7 @@ func TestUpdateNonExistantAchievement(t *testing.T) {
 		Name:        "addName",
 		Description: "addDescription",
 		Condition:   "addCondition",
-		SpriteID:    1,
+		SpriteID:    uuid.NewString(),
 	}
 
 	request := httptest.NewRequest(http.MethodPut, "/achievements", nil)
@@ -154,7 +154,7 @@ func TestUpdateAchievement(t *testing.T) {
 		Name:        "addName",
 		Description: "addDescription",
 		Condition:   "addCondition",
-		SpriteID:    1,
+		SpriteID:    uuid.NewString(),
 	}
 
 	request := httptest.NewRequest(http.MethodPut, "/achievements", nil)

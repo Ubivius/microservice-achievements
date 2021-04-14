@@ -14,7 +14,7 @@ type Achievement struct {
 	Name        string `json:"name" validate:"required"`
 	Description string `json:"description"`
 	Condition   string `json:"condition" validate:"required"`
-	SpriteID    int    `json:"spriteid"`
+	SpriteID    string `json:"sprite_id"`
 	CreatedOn   string `json:"-"`
 	UpdatedOn   string `json:"-"`
 }
