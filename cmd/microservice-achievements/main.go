@@ -10,7 +10,6 @@ import (
 
 	"github.com/Ubivius/microservice-achievements/pkg/database"
 	"github.com/Ubivius/microservice-achievements/pkg/handlers"
-	"github.com/Ubivius/microservice-achievements/pkg/resources"
 	"github.com/Ubivius/microservice-achievements/pkg/router"
 	"go.opentelemetry.io/otel/exporters/stdout"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
@@ -43,11 +42,8 @@ func main() {
 	tracerProvider := sdktrace.NewTracerProvider(sdktrace.WithSpanProcessor(batchSpanProcessor))
 	defer func() { _ = tracerProvider.Shutdown(ctx) }()
 
-	// Resources init
-	resources := resources.NewResources()
-
 	// Database init
-	db := database.NewMongoAchievements(resources)
+	db := database.NewMongoAchievements()
 
 	// Creating handlers
 	achievementHandler := handlers.NewAchievementsHandler(db)
