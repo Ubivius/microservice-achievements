@@ -4,10 +4,13 @@ import (
 	"net/http"
 
 	"github.com/Ubivius/microservice-achievements/pkg/data"
+	"go.opentelemetry.io/otel"
 )
 
 // UpdateAchievements updates the achievement with the ID specified in the received JSON achievement
 func (achievementHandler *AchievementsHandler) UpdateAchievements(responseWriter http.ResponseWriter, request *http.Request) {
+	_, span := otel.Tracer("template").Start(request.Context(), "updateAchievementById")
+	defer span.End()
 	achievement := request.Context().Value(KeyAchievement{}).(*data.Achievement)
 	log.Info("UpdateAchievements request", "id", achievement.ID)
 
