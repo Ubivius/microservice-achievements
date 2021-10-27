@@ -1,6 +1,7 @@
 package database
 
 import (
+	"context"
 	"time"
 
 	"github.com/Ubivius/microservice-achievements/pkg/data"
@@ -27,11 +28,11 @@ func (mp *MockAchievements) CloseDB() {
 	log.Info("Mocked DB connection closed")
 }
 
-func (mp *MockAchievements) GetAchievements() data.Achievements {
+func (mp *MockAchievements) GetAchievements(ctx context.Context) data.Achievements {
 	return achievementList
 }
 
-func (mp *MockAchievements) GetAchievementByID(id string) (*data.Achievement, error) {
+func (mp *MockAchievements) GetAchievementByID(ctx context.Context, id string) (*data.Achievement, error) {
 	index := findIndexByAchievementID(id)
 	if index == -1 {
 		return nil, data.ErrorAchievementNotFound
@@ -39,7 +40,7 @@ func (mp *MockAchievements) GetAchievementByID(id string) (*data.Achievement, er
 	return achievementList[index], nil
 }
 
-func (mp *MockAchievements) UpdateAchievement(achievement *data.Achievement) error {
+func (mp *MockAchievements) UpdateAchievement(ctx context.Context, achievement *data.Achievement) error {
 	index := findIndexByAchievementID(achievement.ID)
 	if index == -1 {
 		return data.ErrorAchievementNotFound
@@ -48,13 +49,13 @@ func (mp *MockAchievements) UpdateAchievement(achievement *data.Achievement) err
 	return nil
 }
 
-func (mp *MockAchievements) AddAchievement(achievement *data.Achievement) error {
+func (mp *MockAchievements) AddAchievement(ctx context.Context, achievement *data.Achievement) error {
 	achievement.ID = uuid.NewString()
 	achievementList = append(achievementList, achievement)
 	return nil
 }
 
-func (mp *MockAchievements) DeleteAchievement(id string) error {
+func (mp *MockAchievements) DeleteAchievement(ctx context.Context, id string) error {
 	index := findIndexByAchievementID(id)
 	if index == -1 {
 		return data.ErrorAchievementNotFound

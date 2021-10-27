@@ -15,7 +15,7 @@ func (achievementHandler *AchievementsHandler) UpdateAchievements(responseWriter
 	log.Info("UpdateAchievements request", "id", achievement.ID)
 
 	// Update achievement
-	err := achievementHandler.db.UpdateAchievement(achievement)
+	err := achievementHandler.db.UpdateAchievement(request.Context(), achievement)
 	switch err {
 	case nil:
 		responseWriter.WriteHeader(http.StatusNoContent)

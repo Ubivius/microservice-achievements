@@ -14,7 +14,7 @@ func (achievementHandler *AchievementsHandler) AddAchievement(responseWriter htt
 	log.Info("AddAchievement request")
 	achievement := request.Context().Value(KeyAchievement{}).(*data.Achievement)
 
-	err := achievementHandler.db.AddAchievement(achievement)
+	err := achievementHandler.db.AddAchievement(request.Context(), achievement)
 
 	switch err {
 	case nil:

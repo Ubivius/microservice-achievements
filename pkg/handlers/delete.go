@@ -14,7 +14,7 @@ func (achievementHandler *AchievementsHandler) Delete(responseWriter http.Respon
 	id := getAchievementID(request)
 	log.Info("Delete achievement by ID request", "id", id)
 
-	err := achievementHandler.db.DeleteAchievement(id)
+	err := achievementHandler.db.DeleteAchievement(request.Context(), id)
 	switch err {
 	case nil:
 		responseWriter.WriteHeader(http.StatusNoContent)

@@ -17,8 +17,8 @@ import (
 var ErrorEnvVar = fmt.Errorf("missing environment variable")
 
 type MongoAchievements struct {
-	client           *mongo.Client
-	collection       *mongo.Collection
+	client     *mongo.Client
+	collection *mongo.Collection
 }
 
 func NewMongoAchievements() AchievementDB {
@@ -73,7 +73,7 @@ func (mp *MongoAchievements) CloseDB() {
 	}
 }
 
-func (mp *MongoAchievements) GetAchievements() data.Achievements {
+func (mp *MongoAchievements) GetAchievements(ctx context.Context) data.Achievements {
 	// achievements will hold the array of Achievements
 	var achievements data.Achievements
 
@@ -103,7 +103,7 @@ func (mp *MongoAchievements) GetAchievements() data.Achievements {
 	return achievements
 }
 
-func (mp *MongoAchievements) GetAchievementByID(id string) (*data.Achievement, error) {
+func (mp *MongoAchievements) GetAchievementByID(ctx context.Context, id string) (*data.Achievement, error) {
 	// MongoDB search filter
 	filter := bson.D{{Key: "_id", Value: id}}
 
@@ -117,7 +117,7 @@ func (mp *MongoAchievements) GetAchievementByID(id string) (*data.Achievement, e
 	return &result, err
 }
 
-func (mp *MongoAchievements) UpdateAchievement(achievement *data.Achievement) error {
+func (mp *MongoAchievements) UpdateAchievement(ctx context.Context, achievement *data.Achievement) error {
 	// Set updated timestamp in achievement
 	achievement.UpdatedOn = time.Now().UTC().String()
 
@@ -136,7 +136,7 @@ func (mp *MongoAchievements) UpdateAchievement(achievement *data.Achievement) er
 	return err
 }
 
-func (mp *MongoAchievements) AddAchievement(achievement *data.Achievement) error {
+func (mp *MongoAchievements) AddAchievement(ctx context.Context, achievement *data.Achievement) error {
 	achievement.ID = uuid.NewString()
 	// Adding time information to new achievement
 	achievement.CreatedOn = time.Now().UTC().String()
@@ -152,7 +152,7 @@ func (mp *MongoAchievements) AddAchievement(achievement *data.Achievement) error
 	return nil
 }
 
-func (mp *MongoAchievements) DeleteAchievement(id string) error {
+func (mp *MongoAchievements) DeleteAchievement(ctx context.Context, id string) error {
 	// MongoDB search filter
 	filter := bson.D{{Key: "_id", Value: id}}
 
@@ -166,7 +166,7 @@ func (mp *MongoAchievements) DeleteAchievement(id string) error {
 	return nil
 }
 
-func mongodbURI() string { 
+func mongodbURI() string {
 	hostname := os.Getenv("DB_HOSTNAME")
 	port := os.Getenv("DB_PORT")
 	username := os.Getenv("DB_USERNAME")

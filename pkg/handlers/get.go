@@ -13,7 +13,7 @@ func (achievementHandler *AchievementsHandler) GetAchievements(responseWriter ht
 	_, span := otel.Tracer("template").Start(request.Context(), "getAchievements")
 	defer span.End()
 	log.Info("GetAchievements request")
-	achievementList := achievementHandler.db.GetAchievements()
+	achievementList := achievementHandler.db.GetAchievements(request.Context())
 	err := json.NewEncoder(responseWriter).Encode(achievementList)
 	if err != nil {
 		log.Error(err, "Error serializing achievement")
@@ -29,7 +29,7 @@ func (achievementHandler *AchievementsHandler) GetAchievementByID(responseWriter
 
 	log.Info("GetAchievementByID request", "id", id)
 
-	achievement, err := achievementHandler.db.GetAchievementByID(id)
+	achievement, err := achievementHandler.db.GetAchievementByID(request.Context(), id)
 
 	switch err {
 	case nil:

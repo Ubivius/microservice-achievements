@@ -27,13 +27,13 @@ func main() {
 	logf.SetLogger(newLogger.WithName("log"))
 
 	// Starting tracer provider
-	tp := tracing.CreateTracerProvider("http://192.168.6.12:14268/api/traces", "microservice-achievements-traces")
+	tp := tracing.CreateTracerProvider("http://localhost:14268/api/traces", "microservice-achievements-traces")
 
 	// Starting metrics exporter
 	metrics.StartPrometheusExporterWithName("achievements")
 
 	// Database init
-	db := database.NewMongoAchievements()
+	db := database.NewMockAchievements()
 
 	// Creating handlers
 	achievementHandler := handlers.NewAchievementsHandler(db)
