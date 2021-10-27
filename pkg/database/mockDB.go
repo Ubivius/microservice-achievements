@@ -6,6 +6,7 @@ import (
 
 	"github.com/Ubivius/microservice-achievements/pkg/data"
 	"github.com/google/uuid"
+	"go.opentelemetry.io/otel"
 )
 
 type MockAchievements struct {
@@ -29,10 +30,14 @@ func (mp *MockAchievements) CloseDB() {
 }
 
 func (mp *MockAchievements) GetAchievements(ctx context.Context) data.Achievements {
+	_, span := otel.Tracer("achievements").Start(ctx, "getAchievementsDatabase")
+	defer span.End()
 	return achievementList
 }
 
 func (mp *MockAchievements) GetAchievementByID(ctx context.Context, id string) (*data.Achievement, error) {
+	_, span := otel.Tracer("achievements").Start(ctx, "getAchievementsByIdDatabase")
+	defer span.End()
 	index := findIndexByAchievementID(id)
 	if index == -1 {
 		return nil, data.ErrorAchievementNotFound
@@ -41,6 +46,8 @@ func (mp *MockAchievements) GetAchievementByID(ctx context.Context, id string) (
 }
 
 func (mp *MockAchievements) UpdateAchievement(ctx context.Context, achievement *data.Achievement) error {
+	_, span := otel.Tracer("achievements").Start(ctx, "updateAchievementDatabase")
+	defer span.End()
 	index := findIndexByAchievementID(achievement.ID)
 	if index == -1 {
 		return data.ErrorAchievementNotFound
@@ -50,12 +57,16 @@ func (mp *MockAchievements) UpdateAchievement(ctx context.Context, achievement *
 }
 
 func (mp *MockAchievements) AddAchievement(ctx context.Context, achievement *data.Achievement) error {
+	_, span := otel.Tracer("achievements").Start(ctx, "addAchievementDatabase")
+	defer span.End()
 	achievement.ID = uuid.NewString()
 	achievementList = append(achievementList, achievement)
 	return nil
 }
 
 func (mp *MockAchievements) DeleteAchievement(ctx context.Context, id string) error {
+	_, span := otel.Tracer("achievements").Start(ctx, "deleteAchievementDatabase")
+	defer span.End()
 	index := findIndexByAchievementID(id)
 	if index == -1 {
 		return data.ErrorAchievementNotFound
