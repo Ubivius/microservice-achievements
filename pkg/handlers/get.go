@@ -10,7 +10,7 @@ import (
 
 // GetAchievements returns the full list of achievements
 func (achievementHandler *AchievementsHandler) GetAchievements(responseWriter http.ResponseWriter, request *http.Request) {
-	_, span := otel.Tracer("template").Start(request.Context(), "getAchievements")
+	_, span := otel.Tracer("achievements").Start(request.Context(), "getAchievements")
 	defer span.End()
 	log.Info("GetAchievements request")
 	achievementList := achievementHandler.db.GetAchievements(request.Context())
@@ -23,7 +23,7 @@ func (achievementHandler *AchievementsHandler) GetAchievements(responseWriter ht
 
 // GetAchievementByID returns a single achievement from the database
 func (achievementHandler *AchievementsHandler) GetAchievementByID(responseWriter http.ResponseWriter, request *http.Request) {
-	_, span := otel.Tracer("template").Start(request.Context(), "getAchievementById")
+	_, span := otel.Tracer("achievements").Start(request.Context(), "getAchievementById")
 	defer span.End()
 	id := getAchievementID(request)
 

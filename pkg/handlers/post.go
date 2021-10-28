@@ -9,7 +9,7 @@ import (
 
 // AddAchievement creates a new achievement from the received JSON
 func (achievementHandler *AchievementsHandler) AddAchievement(responseWriter http.ResponseWriter, request *http.Request) {
-	_, span := otel.Tracer("template").Start(request.Context(), "addAchievement")
+	_, span := otel.Tracer("achievements").Start(request.Context(), "addAchievement")
 	defer span.End()
 	log.Info("AddAchievement request")
 	achievement := request.Context().Value(KeyAchievement{}).(*data.Achievement)

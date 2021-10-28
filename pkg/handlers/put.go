@@ -9,7 +9,7 @@ import (
 
 // UpdateAchievements updates the achievement with the ID specified in the received JSON achievement
 func (achievementHandler *AchievementsHandler) UpdateAchievements(responseWriter http.ResponseWriter, request *http.Request) {
-	_, span := otel.Tracer("template").Start(request.Context(), "updateAchievementById")
+	_, span := otel.Tracer("achievements").Start(request.Context(), "updateAchievementById")
 	defer span.End()
 	achievement := request.Context().Value(KeyAchievement{}).(*data.Achievement)
 	log.Info("UpdateAchievements request", "id", achievement.ID)

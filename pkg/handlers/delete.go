@@ -9,7 +9,7 @@ import (
 
 // Delete a achievement with specified id from the database
 func (achievementHandler *AchievementsHandler) Delete(responseWriter http.ResponseWriter, request *http.Request) {
-	_, span := otel.Tracer("template").Start(request.Context(), "deleteAchievementById")
+	_, span := otel.Tracer("achievements").Start(request.Context(), "deleteAchievementById")
 	defer span.End()
 	id := getAchievementID(request)
 	log.Info("Delete achievement by ID request", "id", id)
