@@ -5,12 +5,15 @@ import (
 	"net/http"
 
 	"github.com/Ubivius/microservice-achievements/pkg/data"
+	"go.opentelemetry.io/otel"
 )
 
 // GetAchievements returns the full list of achievements
 func (achievementHandler *AchievementsHandler) GetAchievements(responseWriter http.ResponseWriter, request *http.Request) {
+	_, span := otel.Tracer("achievements").Start(request.Context(), "getAchievements")
+	defer span.End()
 	log.Info("GetAchievements request")
-	achievementList := achievementHandler.db.GetAchievements()
+	achievementList := achievementHandler.db.GetAchievements(request.Context())
 	err := json.NewEncoder(responseWriter).Encode(achievementList)
 	if err != nil {
 		log.Error(err, "Error serializing achievement")
@@ -20,12 +23,14 @@ func (achievementHandler *AchievementsHandler) GetAchievements(responseWriter ht
 
 // GetAchievementByID returns a single achievement from the database
 func (achievementHandler *AchievementsHandler) GetAchievementByID(responseWriter http.ResponseWriter, request *http.Request) {
+	_, span := otel.Tracer("achievements").Start(request.Context(), "getAchievementById")
+	defer span.End()
 	id := getAchievementID(request)
 
 	log.Info("GetAchievementByID request", "id", id)
 
-	achievement, err := achievementHandler.db.GetAchievementByID(id)
-	
+	achievement, err := achievementHandler.db.GetAchievementByID(request.Context(), id)
+
 	switch err {
 	case nil:
 		err = json.NewEncoder(responseWriter).Encode(achievement)

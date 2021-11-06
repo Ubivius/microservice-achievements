@@ -1,6 +1,7 @@
 package database
 
 import (
+	"context"
 	"testing"
 
 	"github.com/Ubivius/microservice-achievements/pkg/data"
@@ -32,7 +33,7 @@ func TestMongoDBAddAchievementIntegration(t *testing.T) {
 	}
 
 	mp := NewMongoAchievements()
-	err := mp.AddAchievement(achievement)
+	err := mp.AddAchievement(context.Background(), achievement)
 	if err != nil {
 		t.Errorf("Failed to add achievement to database")
 	}
@@ -53,7 +54,7 @@ func TestMongoDBUpdateAchievementIntegration(t *testing.T) {
 	}
 
 	mp := NewMongoAchievements()
-	err := mp.UpdateAchievement(achievement)
+	err := mp.UpdateAchievement(context.Background(), achievement)
 	if err != nil {
 		t.Fail()
 	}
@@ -66,7 +67,7 @@ func TestMongoDBGetAchievementsIntegration(t *testing.T) {
 	}
 
 	mp := NewMongoAchievements()
-	achievements := mp.GetAchievements()
+	achievements := mp.GetAchievements(context.Background())
 	if achievements == nil {
 		t.Fail()
 	}
@@ -80,10 +81,10 @@ func TestMongoDBGetAchievementByIDIntegration(t *testing.T) {
 	}
 
 	mp := NewMongoAchievements()
-	_, err := mp.GetAchievementByID("c9ddfb2f-fc4d-40f3-87c0-f6713024a993")
+	_, err := mp.GetAchievementByID(context.Background(), "c9ddfb2f-fc4d-40f3-87c0-f6713024a993")
 	if err != nil {
 		t.Fail()
 	}
-	
+
 	mp.CloseDB()
 }
