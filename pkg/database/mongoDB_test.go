@@ -31,6 +31,27 @@ func integrationTestSetup(t *testing.T) {
 	}
 }
 
+func addAchievementAndGetId(t *testing.T) string {
+	t.Log("Adding product")
+	achievement := &data.Achievement{
+		Name:        "testName",
+		Description: "testDescription",
+		Condition:   "testCondition",
+		SpriteID:    uuid.NewString(),
+	}
+
+	mp := NewMongoAchievements()
+	err := mp.AddAchievement(context.Background(), achievement)
+	if err != nil {
+		t.Errorf("Failed to add achievement to database")
+	}
+
+	t.Log("Fetching new achievement ID")
+	achievements := mp.GetAchievements(context.Background())
+	mp.CloseDB()
+	return achievements[len(achievements)-1].ID
+}
+
 func TestMongoDBConnectionAndShutdownIntegration(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Test skipped during unit tests")
@@ -79,9 +100,11 @@ func TestMongoDBUpdateAchievementIntegration(t *testing.T) {
 	}
 	integrationTestSetup(t)
 
+	achievementID := addAchievementAndGetId(t)
+
 	achievement := &data.Achievement{
-		ID:          uuid.NewString(),
-		Name:        "testName",
+		ID:          achievementID,
+		Name:        "newName",
 		Description: "testDescription",
 		Condition:   "testCondition",
 		SpriteID:    uuid.NewString(),
@@ -92,6 +115,15 @@ func TestMongoDBUpdateAchievementIntegration(t *testing.T) {
 	if err != nil {
 		t.Fail()
 	}
+
+	updatedAchievement, err := mp.GetAchievementByID(context.Background(), achievementID)
+	if err != nil {
+		t.Error("Error getting achievement from database")
+	}
+	if updatedAchievement.Name != achievement.Name {
+		t.Errorf("Update on achievement failed, expected %s but got %s", achievement.Name, updatedAchievement.Name)
+	}
+
 	mp.CloseDB()
 }
 
@@ -101,12 +133,17 @@ func TestMongoDBGetAchievementsIntegration(t *testing.T) {
 	}
 	integrationTestSetup(t)
 
+	addAchievementAndGetId(t)
+
 	mp := NewMongoAchievements()
 	achievements := mp.GetAchievements(context.Background())
 	if achievements == nil {
-		t.Fail()
+		t.Error("Returned achievements is nil")
 	}
 
+	if len(achievements) != 1 {
+		t.Errorf("Too many achievements in database, expected 1 but got %d", len(achievements))
+	}
 	mp.CloseDB()
 }
 
@@ -116,8 +153,10 @@ func TestMongoDBGetAchievementByIDIntegration(t *testing.T) {
 	}
 	integrationTestSetup(t)
 
+	achievementID := addAchievementAndGetId(t)
+
 	mp := NewMongoAchievements()
-	_, err := mp.GetAchievementByID(context.Background(), "c9ddfb2f-fc4d-40f3-87c0-f6713024a993")
+	_, err := mp.GetAchievementByID(context.Background(), achievementID)
 	if err != nil {
 		t.Fail()
 	}
