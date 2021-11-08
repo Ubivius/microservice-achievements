@@ -169,6 +169,22 @@ func (mp *MongoAchievements) DeleteAchievement(ctx context.Context, id string) e
 	return nil
 }
 
+func deleteAllAchievementsFromMongoDB() error {
+	uri := mongodbURI()
+
+	// Setting client options
+	opts := options.Client()
+	clientOptions := opts.ApplyURI(uri)
+	client, err := mongo.Connect(context.Background(), clientOptions)
+	if err != nil || client == nil {
+		log.Error(err, "Failed to connect to database. Failing test")
+		return err
+	}
+	collection := client.Database("ubivius").Collection("achievements")
+	_, err = collection.DeleteMany(context.Background(), bson.D{{}})
+	return err
+}
+
 func mongodbURI() string {
 	hostname := os.Getenv("DB_HOSTNAME")
 	port := os.Getenv("DB_PORT")
