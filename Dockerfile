@@ -21,6 +21,4 @@ FROM golang:stretch as local
 
 FROM ${BUILD_TYPE} AS exit_artefact
 COPY --from=build-env /go/src/main /microservice
-EXPOSE 8888
-EXPOSE 9090
-CMD ["/microservice"]
+CMD ["microservice"]
