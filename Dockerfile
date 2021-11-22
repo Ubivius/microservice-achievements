@@ -10,9 +10,7 @@ RUN echo "Setup build environnement"
 RUN export PATH=$PATH:/go/bin
 RUN export GO111MODULE=on
 RUN echo "Building Microsevice..."
-
 RUN go build cmd/microservice-achievements/main.go
-
 RUN echo "First Docker build-stage is now done"
 
 FROM gcr.io/distroless/base as prod
