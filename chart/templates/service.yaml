@@ -35,6 +35,15 @@ spec:
       targetPort: {{ .Values.service.targetPort }}
       {{- if (and (eq $svcType "NodePort") (not (empty .Values.service.nodePort))) }}
       nodePort: {{ .Values.service.nodePort }}
+      {{- end }}
+{{- range .Values.service.otherPorts }}
+    - port: {{ .port }}
+      protocol: TCP
+      name: {{ .name }}
+      targetPort: {{ .targetPort }}
+      {{- if (and (eq $svcType "NodePort") (not (empty .nodePort))) }}
+      nodePort: {{ .nodePort }}
+      {{- end }}
 {{- end }}
 {{- if .Values.extraPorts }}
 {{ toYaml .Values.extraPorts | indent 4}}
